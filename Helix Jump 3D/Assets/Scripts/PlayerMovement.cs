@@ -6,6 +6,7 @@ public class PlayerMovement : MonoBehaviour
 {
     private Rigidbody playerRigidbody;
     public int jumpForce;
+    private bool isCollisionEntered = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -20,6 +21,14 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
+        if(!isCollisionEntered)
         playerRigidbody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        isCollisionEntered = true;
+        Invoke("IsCollisionEntered",0.2f);
+    }
+
+    private void IsCollisionEntered()
+    {
+        isCollisionEntered = false;
     }
 }
