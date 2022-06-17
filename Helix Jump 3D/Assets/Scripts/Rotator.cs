@@ -18,7 +18,7 @@ public class Rotator : MonoBehaviour
         if (Input.GetMouseButton(0))
         {
             inputX = Input.GetAxis("Mouse X");
-            transform.Rotate(Vector3.up * inputX * rotationSpeed * Time.deltaTime);
+            transform.Rotate(Vector3.up * -inputX * rotationSpeed * Time.deltaTime);
         }
     }
 }
