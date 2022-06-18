@@ -6,11 +6,14 @@ public class HelixManager : MonoBehaviour
 {
     public GameObject[] ringPrefabs;
     private int ySpawn = 0;
-    public int numberOfRings;
-
+    private int numberOfRings;
+    
+    private GameManager gameManager;
     // Start is called before the first frame update
     void Start()
     {
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        numberOfRings = gameManager.currentLevel + 5;
         CreateLevel(numberOfRings);
     }
 

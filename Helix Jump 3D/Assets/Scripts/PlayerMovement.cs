@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.UI;
 public class PlayerMovement : MonoBehaviour
 {
     private Rigidbody playerRigidbody;
@@ -9,16 +9,23 @@ public class PlayerMovement : MonoBehaviour
     private bool isCollisionEntered = false;
 
     private GameManager GameManager;
+
+    public Slider gameProgressSlider;
     // Start is called before the first frame update
     void Start()
     {
         playerRigidbody = GetComponent<Rigidbody>();
         GameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        gameProgressSlider.maxValue = (GameManager.currentLevel + 5) * 5 - 4;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (gameProgressSlider.value != gameProgressSlider.maxValue && -transform.position.y > gameProgressSlider.value)
+        {
+            gameProgressSlider.value = -transform.position.y;
+        }
         
     }
 
