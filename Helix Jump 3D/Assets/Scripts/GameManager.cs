@@ -1,51 +1,43 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    public GameObject[] ringPrefabs;
-    private int ySpawn = 0;
-    public int numberOfRings;
+    public bool gameOver = false;
+    public bool levelCompleted = false;
 
+    public GameObject GameOverPanel;
+    public GameObject LevelCompletedPanel;
     // Start is called before the first frame update
     void Start()
     {
-        CreateRing(numberOfRings);
+        
     }
 
     // Update is called once per frame
     void Update()
     {
-
-    }
-    private void CreateRing(int ringLength)
-    {
-        for (int i = 0; i < ringLength; i++)
+        if (gameOver)
         {
-            if (i == 0)
-            {
-                GameObject startRing = Instantiate(ringPrefabs[i], Vector3.down * ySpawn, transform.rotation);
-                startRing.transform.parent = transform;
-                ySpawn += 5;
-            }
-
-            else if(i == ringLength - 1)
-            {
-                GameObject finishRing = Instantiate(ringPrefabs[ringPrefabs.Length-1], Vector3.down * ySpawn, transform.rotation);
-                finishRing.transform.parent = transform;
-                ySpawn += 5;
-            }
-
-            else
-            {
-                int ringIndex = Random.Range(1, ringPrefabs.Length-1);
-                GameObject ring = Instantiate(ringPrefabs[ringIndex], Vector3.down * ySpawn, transform.rotation);
-                ring.transform.parent = transform;
-                ySpawn += 5;
-            }
-
+            GameOverPanel.SetActive(true);
+            Cursor.lockState = CursorLockMode.None;
         }
+        if (levelCompleted)
+        {
+            LevelCompletedPanel.SetActive(true);
+            Cursor.lockState = CursorLockMode.None;
+        }
+    }
 
+    public void RestartButton()
+    {
+        SceneManager.LoadScene("Level");
+    }
+
+    public void ContinueButtton()
+    {
+        SceneManager.LoadScene("Level");
     }
 }
