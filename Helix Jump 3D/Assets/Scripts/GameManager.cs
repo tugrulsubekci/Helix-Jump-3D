@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour
 
     public GameObject GameOverPanel;
     public GameObject LevelCompletedPanel;
+    public GameObject DragToPlay;
 
     public int currentLevel;
     public TextMeshProUGUI currentLevelText;
@@ -23,7 +24,10 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-  
+        if (currentLevel == 1)
+        {
+            DragToPlay.SetActive(true);
+        }
     }
 
     // Update is called once per frame
@@ -44,14 +48,27 @@ public class GameManager : MonoBehaviour
             Cursor.lockState = CursorLockMode.None;
             PlayerPrefs.SetInt("currentLevel", currentLevel + 1);
         }
+        if(Input.GetMouseButtonDown(0))
+        {
+            DragToPlay.SetActive(false);
+        }
     }
 
     public void RestartButton()
     {
-        SceneManager.LoadScene("Level");
+        FindObjectOfType<AudioManager>().Play("Click");
+        Invoke("LoadSceneLevel", 0.1f);
+        
     }
 
     public void ContinueButtton()
+    {
+        FindObjectOfType<AudioManager>().Play("Click");
+        Invoke("LoadSceneLevel", 0.1f);
+
+    }
+
+    public void LoadSceneLevel()
     {
         SceneManager.LoadScene("Level");
     }

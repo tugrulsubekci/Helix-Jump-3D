@@ -7,16 +7,20 @@ public class PlayerMovement : MonoBehaviour
     private Rigidbody playerRigidbody;
     public int jumpForce;
     private bool isCollisionEntered = false;
+    public float gravityMultiplier;
 
     private GameManager GameManager;
 
     public Slider gameProgressSlider;
+
     // Start is called before the first frame update
     void Start()
     {
+        Physics.gravity = new Vector3(0, -17.0f, 0);
         playerRigidbody = GetComponent<Rigidbody>();
         GameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         gameProgressSlider.maxValue = (GameManager.currentLevel + 5) * 5 - 4;
+        
     }
 
     // Update is called once per frame
@@ -31,12 +35,14 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if(!isCollisionEntered && !GameManager.gameOver)
+        if(!isCollisionEntered && !GameManager.gameOver && !GameManager.levelCompleted)
         {
             playerRigidbody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
             isCollisionEntered = true;
-            Invoke("IsCollisionEntered",0.2f);
+            Invoke(nameof(IsCollisionEntered),0.2f);
             string materialName = collision.gameObject.GetComponent<MeshRenderer>().material.name;
+            FindObjectOfType<AudioManager>().Play("Bounce");
+
             if (materialName == "Safe (Instance)")
             {
 
@@ -44,10 +50,12 @@ public class PlayerMovement : MonoBehaviour
             else if (materialName == "Unsafe (Instance)")
             {
                 GameManager.gameOver = true;
+                FindObjectOfType<AudioManager>().Play("GameOver");
             }
             else if( materialName == "Finish (Instance)")
             {
                 GameManager.levelCompleted = true;
+                FindObjectOfType<AudioManager>().Play("LevelCompleted");
             }
         }
 
