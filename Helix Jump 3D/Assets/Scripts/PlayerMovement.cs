@@ -8,7 +8,7 @@ public class PlayerMovement : MonoBehaviour
     public int jumpForce;
     private bool isCollisionEntered = false;
     public float gravityMultiplier;
-    
+
     // particle system
     public ParticleSystem speedParticle;
     private float prePosition;
@@ -25,7 +25,7 @@ public class PlayerMovement : MonoBehaviour
         playerRigidbody = GetComponent<Rigidbody>();
         GameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         gameProgressSlider.maxValue = (GameManager.currentLevel + 5) * 5 - 4;
-        
+
     }
 
     // Update is called once per frame
@@ -44,36 +44,36 @@ public class PlayerMovement : MonoBehaviour
     }
     private void OnCollisionEnter(Collision collision)
     {
-        if(!isCollisionEntered && !GameManager.gameOver && !GameManager.levelCompleted)
+        if (!isCollisionEntered && !GameManager.gameOver && !GameManager.levelCompleted)
         {
             playerRigidbody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
             isCollisionEntered = true;
-            Invoke(nameof(IsCollisionEntered),0.2f);
+            Invoke(nameof(IsCollisionEntered), 0.2f);
             string materialName = collision.gameObject.GetComponent<MeshRenderer>().material.name;
             FindObjectOfType<AudioManager>().Play("Bounce");
             prePosition = transform.position.y;
             speedParticle.Stop();
             speedParticle.Clear();
-            if (distance > 15.0f)
-            {
-                for (int i = 0; i < collision.gameObject.GetComponent<Transform>().parent.childCount - 1; i++)
-                {
-                    GameObject x = collision.gameObject.GetComponent<Transform>().parent.GetChild(i).gameObject;
-                    Destroy(x , 0.2f);
-                    FindObjectOfType<AudioManager>().Play("Destroy");
-                }
-                
-            }
+
             if (materialName == "Safe (Instance)")
             {
+                if (distance > 15.0f)
+                {
+                    for (int i = 0; i < collision.gameObject.GetComponent<Transform>().parent.childCount - 1; i++)
+                    {
+                        GameObject x = collision.gameObject.GetComponent<Transform>().parent.GetChild(i).gameObject;
+                        Destroy(x, 0.2f);
+                        FindObjectOfType<AudioManager>().Play("Destroy");
+                    }
 
+                }
             }
             else if (materialName == "Unsafe (Instance)")
             {
                 GameManager.gameOver = true;
                 FindObjectOfType<AudioManager>().Play("GameOver");
             }
-            else if( materialName == "Finish (Instance)")
+            else if (materialName == "Finish (Instance)")
             {
                 GameManager.levelCompleted = true;
                 FindObjectOfType<AudioManager>().Play("LevelCompleted");
